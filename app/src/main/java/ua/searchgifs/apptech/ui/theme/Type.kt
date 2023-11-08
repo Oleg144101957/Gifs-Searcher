@@ -1,10 +1,13 @@
 package ua.searchgifs.apptech.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import ua.searchgifs.apptech.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -15,6 +18,8 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )
+
+
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
@@ -32,3 +37,27 @@ val Typography = Typography(
     )
     */
 )
+
+
+val mainAppFont = FontFamily(Font(R.font.ostrovsky))
+
+val LoadingTypography = Typography(
+    bodyLarge = TextStyle(
+        fontFamily = mainAppFont,
+        fontWeight = FontWeight.Normal,
+        color = Color.White,
+        fontSize = 32.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ))
+
+
+val GeneralScreenTypography = Typography(
+    bodyLarge = TextStyle(
+        fontFamily = mainAppFont,
+        fontWeight = FontWeight.Normal,
+        color = Color.White,
+        fontSize = 24.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.8.sp,
+    ))

@@ -2,26 +2,31 @@ package ua.searchgifs.apptech.presantation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ua.searchgifs.apptech.domain.model.Action
 import ua.searchgifs.apptech.domain.model.DataObject
 import ua.searchgifs.apptech.domain.model.DataResult
-import ua.searchgifs.apptech.domain.model.MainState
 import ua.searchgifs.apptech.domain.repository.GifsDataRepository
+import ua.searchgifs.apptech.domain.repository.GifsProvider
 import ua.searchgifs.apptech.domain.repository.NetworkConnectionChecker
+import ua.searchgifs.apptech.presantation.models.Action
+import ua.searchgifs.apptech.presantation.models.MainState
 import javax.inject.Inject
 
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val networkConnectionChecker: NetworkConnectionChecker) :
-    ViewModel() {
+class MainViewModel @Inject constructor(
+    private val networkConnectionChecker: NetworkConnectionChecker,
+    private val gifsProvider: GifsProvider
+) : ViewModel() {
 
     private val _liveState: MutableStateFlow<MainState> = MutableStateFlow(MainState.Loading)
     val liveState: StateFlow<MainState> = _liveState
@@ -32,15 +37,7 @@ class MainViewModel @Inject constructor(private val networkConnectionChecker: Ne
     private val _oneGif: MutableStateFlow<String> = MutableStateFlow("")
     val oneGif: StateFlow<String> = _oneGif
 
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(ua.searchgifs.apptech.Constants.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val trendGifsRepo = retrofit.create(GifsDataRepository::class.java)
-
-    fun postData(action: Action) {
+    fun submitAction(action: Action) {
 
         when (action) {
 
@@ -73,59 +70,36 @@ class MainViewModel @Inject constructor(private val networkConnectionChecker: Ne
 
 
     private fun requestDataForGeneralScreen() {
-        val isConnected = networkConnectionChecker.checkConnection()
-        if (isConnected) {
-            //retro
 
-            trendGifsRepo.getGifsForTheGeneralScreen().enqueue(object : Callback<DataResult?> {
-                override fun onResponse(call: Call<DataResult?>, response: Response<DataResult?>) {
-                    val body = response.body()
+        viewModelScope.launch {
 
-                    if (body != null) {
-                        _liveTrends.value = body.res
-                        _liveState.value = MainState.DataForGeneralScreenIsReady
-                    }
+            val isConnected = networkConnectionChecker.checkConnection()
 
-                    Log.d("123123", "THE BODY IS $body")
-                }
+            if (isConnected) {
+                //retro
+                val gifsForTheGeneralScreen = gifsProvider.provideGifsForTheGeneralScreen()
+                _liveTrends.value = gifsForTheGeneralScreen
+                _liveState.value = MainState.DataForGeneralScreenIsReady
 
-                override fun onFailure(call: Call<DataResult?>, t: Throwable) {
-                    Log.d("123123", "onFailure in requestDataForGeneralScreen() method")
-                }
-            })
-
-        } else {
-            //no network
-            _liveState.value = MainState.NoInternetConnection
+            } else {
+                //no network
+                _liveState.value = MainState.NoInternetConnection
+            }
         }
     }
 
     private fun searchForTheGifs(searchWords: String) {
-        val isConnected = networkConnectionChecker.checkConnection()
-        if (isConnected) {
-            //retro
+        viewModelScope.launch {
+            val isConnected = networkConnectionChecker.checkConnection()
+            if (isConnected) {
+                //retro
+                val searchResult = gifsProvider.searchForGifs(searchWords)
+                _liveTrends.value = searchResult
 
-            Log.d("123123", "searchForTheGifs() method")
-
-            trendGifsRepo.searchForGifs(searchWords).enqueue(object : Callback<DataResult?> {
-                override fun onResponse(call: Call<DataResult?>, response: Response<DataResult?>) {
-                    val body = response.body()
-
-                    if (body != null) {
-                        _liveTrends.value = body.res
-                    }
-
-                    Log.d("123123", "THE BODY IS $body")
-                }
-
-                override fun onFailure(call: Call<DataResult?>, t: Throwable) {
-                    Log.d("123123", "onFailure in searchFotTheGifs() method")
-                }
-            })
-
-        } else {
-            //no network
-            _liveState.value = MainState.NoInternetConnection
+            } else {
+                //no network
+                _liveState.value = MainState.NoInternetConnection
+            }
         }
     }
 }

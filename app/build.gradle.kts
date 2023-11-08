@@ -13,7 +13,7 @@ android {
 
         applicationId = "ua.searchgifs.apptech"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -72,7 +72,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.5")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
-
     //anim
     implementation("com.airbnb.android:lottie-compose:6.0.1")
 
@@ -87,7 +86,5 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10")
 
     //glide
-    implementation("com.github.bumptech.glide:glide:4.12.0")
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 }

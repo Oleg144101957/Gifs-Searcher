@@ -15,12 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import ua.searchgifs.apptech.R
-import ua.searchgifs.apptech.domain.model.Action
+import ua.searchgifs.apptech.presantation.models.Action
 import ua.searchgifs.apptech.presantation.viewmodel.MainViewModel
 
 
@@ -33,7 +32,7 @@ fun DetailedScreen(navController: NavHostController, mainViewModel: MainViewMode
 
     Image(
         painter = painterResource(id = R.drawable.background),
-        contentDescription = "start screen background",
+        contentDescription = "detailed screen background",
         modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.FillBounds
     )
@@ -48,12 +47,12 @@ fun DetailedScreen(navController: NavHostController, mainViewModel: MainViewMode
 
         Icon(
             imageVector = Icons.Default.ArrowBack,
-            contentDescription = "button back",
+            contentDescription = "Button back",
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(padding)
                 .clickable {
-                    mainViewModel.postData(Action.GeneralScreen)
+                    mainViewModel.submitAction(Action.GeneralScreen)
                     navController.navigate(ScreensRoutes.GeneralScreen.route)
                 }
         )

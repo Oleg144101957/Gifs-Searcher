@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import ua.searchgifs.apptech.domain.repository.GifsProvider
 import ua.searchgifs.apptech.domain.repository.NetworkConnectionChecker
 import ua.searchgifs.apptech.presantation.viewmodel.MainViewModel
 
@@ -13,7 +14,10 @@ import ua.searchgifs.apptech.presantation.viewmodel.MainViewModel
 class PresentationModule {
 
     @Provides
-    fun provideMainViewModel(networkConnectionChecker: NetworkConnectionChecker): MainViewModel {
-        return MainViewModel(networkConnectionChecker)
+    fun provideMainViewModel(
+        networkConnectionChecker: NetworkConnectionChecker,
+        gifsProvider: GifsProvider
+    ): MainViewModel {
+        return MainViewModel(networkConnectionChecker, gifsProvider)
     }
 }

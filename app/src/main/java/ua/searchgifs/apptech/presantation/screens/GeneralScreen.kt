@@ -2,7 +2,6 @@ package ua.searchgifs.apptech.presantation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,28 +23,25 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import ua.searchgifs.apptech.R
-import ua.searchgifs.apptech.domain.model.Action
-import ua.searchgifs.apptech.domain.model.DataObject
-import ua.searchgifs.apptech.domain.model.MainState
+import ua.searchgifs.apptech.presantation.models.Action
+import ua.searchgifs.apptech.presantation.models.MainState
 import ua.searchgifs.apptech.presantation.viewmodel.MainViewModel
-
+import ua.searchgifs.apptech.ui.theme.GeneralScreenTypography
 
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GeneralScreen(navController: NavHostController, mainViewModel: MainViewModel) {
 
-    val mainFont = FontFamily(Font(R.font.ostrovsky))
     val mainState = mainViewModel.liveState.collectAsState()
     val searchText = remember { mutableStateOf("") }
 
     LaunchedEffect(searchText.value){
         if (searchText.value.length > 2){
-            mainViewModel.postData(Action.SearchGifs(searchText.value))
+            mainViewModel.submitAction(Action.SearchGifs(searchText.value))
         }
     }
 
@@ -73,10 +69,8 @@ fun GeneralScreen(navController: NavHostController, mainViewModel: MainViewModel
         Text(
             text = "General screen",
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            color = Color.White,
-            fontFamily = mainFont
+            style = GeneralScreenTypography.bodyLarge
         )
-
 
         TextField(
             value = searchText.value,
@@ -103,11 +97,11 @@ fun ColumnScope.GifsList(mainViewModel: MainViewModel){
     ) {
         items(listOfDataWithGifs.value.size) {
             GlideImage(model = listOfDataWithGifs.value[it].images.originalImage.url,
-                contentDescription = "Example",
+                contentDescription = "Images",
                 modifier = Modifier
                     .padding(padding)
                     .clickable {
-                        mainViewModel.postData(
+                        mainViewModel.submitAction(
                             Action.SetDetailedGif(listOfDataWithGifs.value[it].images.originalImage.url)
                         )
                     }

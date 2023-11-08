@@ -1,4 +1,4 @@
-package ua.searchgifs.apptech.domain.model
+package ua.searchgifs.apptech.presantation.models
 
 sealed class MainState {
 

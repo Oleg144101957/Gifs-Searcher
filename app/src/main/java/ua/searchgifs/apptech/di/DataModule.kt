@@ -6,7 +6,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import ua.searchgifs.apptech.data.repository.GifsProviderImpl
 import ua.searchgifs.apptech.data.repository.NetworkConnectionCheckerImpl
+import ua.searchgifs.apptech.domain.repository.GifsProvider
 import ua.searchgifs.apptech.domain.repository.NetworkConnectionChecker
 
 
@@ -19,4 +21,8 @@ class DataModule {
         return NetworkConnectionCheckerImpl(context)
     }
 
+    @Provides
+    fun provideGifsProvider(): GifsProvider {
+        return GifsProviderImpl()
+    }
 }

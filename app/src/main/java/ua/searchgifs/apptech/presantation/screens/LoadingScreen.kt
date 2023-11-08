@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,14 +24,13 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import kotlinx.coroutines.delay
 import ua.searchgifs.apptech.R
-import ua.searchgifs.apptech.domain.model.Action
-import ua.searchgifs.apptech.domain.model.MainState
+import ua.searchgifs.apptech.presantation.models.Action
+import ua.searchgifs.apptech.presantation.models.MainState
 import ua.searchgifs.apptech.presantation.viewmodel.MainViewModel
+import ua.searchgifs.apptech.ui.theme.LoadingTypography
 
 @Composable
 fun LoadingScreen(navController: NavHostController, mainViewModel: MainViewModel) {
-
-    val mainFont = FontFamily(Font(R.font.ostrovsky))
 
     val mainState = mainViewModel.liveState.collectAsState()
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loadinganim))
@@ -54,7 +54,7 @@ fun LoadingScreen(navController: NavHostController, mainViewModel: MainViewModel
 
     LaunchedEffect("loading") {
         delay(1000)
-        mainViewModel.postData(Action.RequestData)
+        mainViewModel.submitAction(Action.RequestData)
     }
 
 
@@ -79,7 +79,7 @@ fun LoadingScreen(navController: NavHostController, mainViewModel: MainViewModel
             Text(
                 text = "Loading...",
                 color = Color.White,
-                fontFamily = mainFont,
+                style = LoadingTypography.bodyLarge,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
