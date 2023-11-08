@@ -53,7 +53,6 @@ fun LoadingScreen(navController: NavHostController, mainViewModel: MainViewModel
 
 
     LaunchedEffect("loading") {
-        delay(1000)
         mainViewModel.submitAction(Action.RequestData)
     }
 
